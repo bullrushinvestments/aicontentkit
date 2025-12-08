@@ -1,0 +1,191 @@
+interface BuildCommand {
+  command: string;
+  output?: string;
+}
+
+interface EnvTemplate {
+  [key: string]: string | undefined;
+}
+
+interface RedirectRule {
+  source: string;
+  has: {
+    status: number;
+    regex?: boolean;
+  };
+  destination: string;
+}
+
+interface HeaderPolicy {
+  source: string;
+  headers: Array<{ key: string; value: string }>;
+}
+
+interface CacheStrategy {
+  urlPattern: string;
+  headers?: { [key: string]: string | undefined };
+  immutable?: boolean;
+  maxAgeSeconds?: number;
+  browserCacheTtl?: number;
+  edgeCacheTtl?: number;
+}
+
+interface FrameworkSettings {
+  vercel?: { [key: string]: any };
+  netlify?: { [key: string]: any };
+}
+
+interface DeployConfig {
+  build: BuildCommand;
+  env: EnvTemplate;
+  redirects: Array<RedirectRule>;
+  headers: Array<HeaderPolicy>;
+  cacheStrategies: Array<CacheStrategy>;
+  frameworkSettings: FrameworkSettings;
+}
+
+export const deployConfig: DeployConfig = {
+  build: {
+    command: "next build && next export",
+    output: ".out"
+  },
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PRIVATE_SECRET_KEY: process.env.NEXT_PRIVATE_SECRET_KEY
+  },
+  redirects: [
+    {
+      source: "/old-url",
+      has: { status: 301 },
+      destination: "/new-url"
+    }
+  ],
+  headers: [
+    {
+      source: "/*",
+      headers: [
+        { key: "Access-Control-Allow-Origin", value: "*" },
+        { key: "Access-Control-Allow-Methods", value: "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
+        { key: "Access-Control-Allow-Headers", value: "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" }
+      ]
+    }
+  ],
+  cacheStrategies: [
+    {
+      urlPattern: "/api/*",
+      headers: { "Cache-Control": "no-cache" },
+      immutable: false,
+      maxAgeSeconds: 0
+    },
+    {
+      urlPattern: "/static/*",
+      browserCacheTtl: 31536000, // 1 year in seconds
+      edgeCacheTtl: 31536000
+    }
+  ],
+  frameworkSettings: {
+    vercel: {
+      buildCommand: "next build && next export",
+      outDir: ".out"
+    },
+    netlify: {
+      publish: ".out"
+    }
+  }
+};
+
+interface BuildCommand {
+  command: string;
+  output?: string;
+}
+
+interface EnvTemplate {
+  [key: string]: string | undefined;
+}
+
+interface RedirectRule {
+  source: string;
+  has: {
+    status: number;
+    regex?: boolean;
+  };
+  destination: string;
+}
+
+interface HeaderPolicy {
+  source: string;
+  headers: Array<{ key: string; value: string }>;
+}
+
+interface CacheStrategy {
+  urlPattern: string;
+  headers?: { [key: string]: string | undefined };
+  immutable?: boolean;
+  maxAgeSeconds?: number;
+  browserCacheTtl?: number;
+  edgeCacheTtl?: number;
+}
+
+interface FrameworkSettings {
+  vercel?: { [key: string]: any };
+  netlify?: { [key: string]: any };
+}
+
+interface DeployConfig {
+  build: BuildCommand;
+  env: EnvTemplate;
+  redirects: Array<RedirectRule>;
+  headers: Array<HeaderPolicy>;
+  cacheStrategies: Array<CacheStrategy>;
+  frameworkSettings: FrameworkSettings;
+}
+
+export const deployConfig: DeployConfig = {
+  build: {
+    command: "next build && next export",
+    output: ".out"
+  },
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PRIVATE_SECRET_KEY: process.env.NEXT_PRIVATE_SECRET_KEY
+  },
+  redirects: [
+    {
+      source: "/old-url",
+      has: { status: 301 },
+      destination: "/new-url"
+    }
+  ],
+  headers: [
+    {
+      source: "/*",
+      headers: [
+        { key: "Access-Control-Allow-Origin", value: "*" },
+        { key: "Access-Control-Allow-Methods", value: "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
+        { key: "Access-Control-Allow-Headers", value: "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" }
+      ]
+    }
+  ],
+  cacheStrategies: [
+    {
+      urlPattern: "/api/*",
+      headers: { "Cache-Control": "no-cache" },
+      immutable: false,
+      maxAgeSeconds: 0
+    },
+    {
+      urlPattern: "/static/*",
+      browserCacheTtl: 31536000, // 1 year in seconds
+      edgeCacheTtl: 31536000
+    }
+  ],
+  frameworkSettings: {
+    vercel: {
+      buildCommand: "next build && next export",
+      outDir: ".out"
+    },
+    netlify: {
+      publish: ".out"
+    }
+  }
+};
